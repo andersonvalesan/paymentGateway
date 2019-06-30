@@ -1,0 +1,27 @@
+{
+  "name": "paymentgateway",
+  "version": "1.0.0",
+  "description": "http payment gateway",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/andersonvalesan/paymentGateway.git"
+  },
+  "keywords": [
+    "gateway",
+    "payment"
+  ],
+  "author": "andersonvalesan",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/andersonvalesan/paymentGateway/issues"
+  },
+  "homepage": "https://github.com/andersonvalesan/paymentGateway#readme",
+  "dependencies": {
+    "consign": "^0.1.6",
+    "express.js": "^1.0.0"
+  }
+}
