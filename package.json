@@ -21,6 +21,7 @@
   },
   "homepage": "https://github.com/andersonvalesan/paymentGateway#readme",
   "dependencies": {
+    "body-parser": "^1.19.0",
     "consign": "^0.1.6",
     "express.js": "^1.0.0"
   }
