@@ -5,7 +5,11 @@ module.exports = function(app){
 
 	app.post('/payments/payment', function(req, res){
 		var payment = req.body;
-		console.log(payment);
-		res.send('OK');
+		console.log('Creating payment...');
+
+		payment.status = 'CREATED';
+		payment.date = new Date;
+
+		res.send(payment);
 	});	
 }

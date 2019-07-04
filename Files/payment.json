@@ -2,5 +2,5 @@
 	"payment_type":"credit",
 	"amount":"1000",
 	"currency":"BRL",
-	"description":"Create payment",
+	"description":"Create payment"
 }
