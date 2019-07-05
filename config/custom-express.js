@@ -9,6 +9,7 @@ module.exports = function(){
 
 	consign()
 	.include('apiRoutes')
+	.then('persistency')
 	.into(app);
 
 	return app;

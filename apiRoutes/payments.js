@@ -7,9 +7,15 @@ module.exports = function(app){
 		var payment = req.body;
 		console.log('Creating payment...');
 
+		var connection = app.persistency.connectionFactory();
+	    var paymentDao = new app.persistency.PaymentDao(connection);
+
 		payment.status = 'CREATED';
 		payment.date = new Date;
 
-		res.send(payment);
+	    paymentDao.salva(payment, function(exception, result){
+	      console.log('payment created: ' + result + exception);
+	      res.json(payment);
+	    });
 	});	
 }
