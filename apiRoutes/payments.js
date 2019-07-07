@@ -3,6 +3,48 @@ module.exports = function(app){
 		res.send('OK');
 	});	
 
+	app.delete('/payments/payment/:id', function(req, res){
+		console.log('Refunding payment...');
+
+		var connection = app.persistency.connectionFactory();
+	    var paymentDao = new app.persistency.PaymentDao(connection);
+
+	    var payment = {};
+
+		payment.status = 'REFUNDED';
+		payment.id = req.params.id;
+
+	    paymentDao.update(payment, function(exception, result){
+	    	if(exception){
+	    		return res.status(500).send(exception);
+	    	}
+
+	    	console.log('payment refunded: ' + result);
+	    	return res.status(201).json(payment);
+	    });
+	});
+
+	app.put('/payments/payment/:id', function(req, res){
+		console.log('Charging payment...');
+
+		var connection = app.persistency.connectionFactory();
+	    var paymentDao = new app.persistency.PaymentDao(connection);
+
+	    var payment = {};
+
+		payment.status = 'CHARGED';
+		payment.id = req.params.id;
+
+	    paymentDao.update(payment, function(exception, result){
+	    	if(exception){
+	    		return res.status(500).send(exception);
+	    	}
+
+	    	console.log('payment charged: ' + result);
+	    	return res.status(204).json(payment);
+	    });
+	});
+
 	app.post('/payments/payment', function(req, res){
 		var payment = req.body;
 
@@ -24,21 +66,41 @@ module.exports = function(app){
 		    res.status(400).send(errors);
 		    return;
 		}
-		console.log('Creating payment...');
+		console.log('Reserving payment...');
 
 		var connection = app.persistency.connectionFactory();
 	    var paymentDao = new app.persistency.PaymentDao(connection);
 
-		payment.status = 'CREATED';
+		payment.status = 'RESERVED';
 		payment.date = new Date;
 
-	    paymentDao.salva(payment, function(exception, result){
+	    paymentDao.save(payment, function(exception, result){
 	    	if(exception){
-	    		return res.status(400).send(exception);
+	    		return res.status(500).send(exception);
 	    	}
 
-	    	console.log('payment created: ' + result);
-	    	return res.json(payment);
+	    	payment.id = result.insertId;
+
+	    	console.log('payment reserved: ' + result);
+	    	res.location('payments/payment/' + payment.id);
+
+	    	var response = {
+	    		payment_data : payment,
+	    		links : [
+	    			{
+	    				href:"http://localhost:3000/payments/payment" + payment.id,
+	    				rel:"charge",
+	    				method:"PUT"
+	    			},
+	    			{
+	    				href:"http://localhost:3000/payments/payment" + payment.id,
+	    				rel:"refund",
+	    				method:"DELETE"
+	    			}
+	    		]
+	    	}
+
+	    	return res.status(201).json(response);
 	    });
 	});	
 }
